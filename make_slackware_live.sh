@@ -2225,7 +2225,7 @@ fi
 sed -e "s/^ *\([^#]\)/#\1/" -i ${LIVE_ROOTDIR}/etc/slackpkg/mirrors
 # Enable a Slackware mirror for slackpkg:
 cat <<EOT >> ${LIVE_ROOTDIR}/etc/slackpkg/mirrors
-http://slackware.uk/slackware/slackware${DIRSUFFIX}-${SL_VERSION}/
+https://reddoglinux.ddns.net/linux/slackware${DIRSUFFIX}-${SL_VERSION}/
 EOT
 
 ## Blacklist the l10n packages;
@@ -2256,7 +2256,7 @@ WGETOPTS="--timeout=20 --tries=2"
 GREYLIST=on
 PKGS_PRIORITY=( gnome )
 REPOPLUS=( gnome slackpkgplus )
-MIRRORPLUS['slackpkgplus']=http://slackware.nl/slackpkgplus/
+MIRRORPLUS['slackpkgplus']=https://reddoglinux.ddns.net/linux/slackpkg+/
 MIRRORPLUS['gnome']=https://reddoglinux.ddns.net/linux/gnome/48.x/x86_64/
 EOPL
   cat <<EOPL > etc/slackpkg/greylist
