@@ -110,6 +110,7 @@ libdmapsharing:ADD
 libei:ADD
 libfdk-aac:ADD
 libfprint:ADD
+libfyaml:ADD
 libgedit-amtk:ADD
 libgedit-gfls:ADD
 libgedit-gtksourceview:ADD
