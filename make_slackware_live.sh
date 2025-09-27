@@ -166,6 +166,12 @@ CSMUIDNR=${CSMUIDNR:-"600"}
 CSMGRP=${CSMGRP:-"cosmic-greeter"}
 CSMGRPNR=${CSMUIDNR:-"600"}
 
+# The lightdm account:
+LDUID=${LDUID:-"lightdm"}
+LDUIDNR=${LDUIDNR:-"400"}
+LDGRP=${LDGRP:-"lightdm"}
+LDGRPNR=${LDGRPNR:-"400"}
+
 # Custom name for the host:
 LIVE_HOSTNAME=${LIVE_HOSTNAME:-"darkstar"}
 
