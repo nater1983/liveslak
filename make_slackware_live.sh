@@ -2255,8 +2255,7 @@ USEBL=1
 WGETOPTS="--timeout=20 --tries=2"
 GREYLIST=on
 PKGS_PRIORITY=( gnome )
-REPOPLUS=( gnome slackpkgplus )
-MIRRORPLUS['slackpkgplus']=https://reddoglinux.ddns.net/linux/slackpkg+/
+REPOPLUS=( gnome )
 MIRRORPLUS['gnome']=https://reddoglinux.ddns.net/linux/gnome/48.x/x86_64/
 EOPL
   cat <<EOPL > etc/slackpkg/greylist
