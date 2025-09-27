@@ -1234,7 +1234,7 @@ function create_iso() {
 
   # Time to determine the output filename, now that we know all the variables
   # and ensured that the OUTPUT directory exists:
-  OUTFILE=${OUTFILE:-"${OUTPUT}/${DISTRO}${DIRSUFFIX}-live${ISOTAG}-${SL_VERSION}-gfs49.iso"}
+  OUTFILE=${OUTFILE:-"${OUTPUT}/${DISTRO}${DIRSUFFIX}-live${ISOTAG}-${SL_VERSION}-${ISO_FLAVOR}.iso"}
   if [ "$USEXORR" = "NO" ]; then
     mkisofs -o "${OUTFILE}" \
       -V "${MEDIALABEL}" \
