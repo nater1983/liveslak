@@ -1,7 +1,5 @@
 AppStream:ADD
 appeditor:ADD
-ayatana-ido:ADD
-ayatana-indicator-application:ADD
 bamf:ADD
 bluetooth-daemon:ADD
 bubblewrap:ADD
@@ -22,7 +20,6 @@ elementary-fonts:ADD
 elementary-mail:ADD
 elementary-music:ADD
 elementary-photos:ADD
-elementary-print:ADD
 elementary-stylesheet:ADD
 elementary-tasks:ADD
 elementary-wallpapers:ADD
@@ -51,8 +48,6 @@ http-parser:ADD
 imlib2:ADD
 libadwaita:ADD
 libavif:ADD
-libayatana-appindicator:ADD
-libayatana-indicator:ADD
 libbacktrace:ADD
 libchamplain:ADD
 libcloudproviders:ADD
@@ -81,7 +76,6 @@ openrc-settingsd:ADD
 orca:ADD
 pantheon-agent-geoclue2:ADD
 pantheon-agent-polkit:ADD
-pantheon-applications-menu:ADD
 pantheon-default-settings:ADD
 pantheon-files:ADD
 pantheon-icons:ADD
@@ -131,7 +125,7 @@ unifdef:ADD
 webkit2gtk4.1:ADD
 webkit2gtk6.0:ADD
 wingpanel:ADD
-wingpanel-indicator-a11y:ADD
+wingpanel-applications-menu:ADD
 wingpanel-indicator-bluetooth:ADD
 wingpanel-indicator-datetime:ADD
 wingpanel-indicator-keyboard:ADD
@@ -139,7 +133,7 @@ wingpanel-indicator-network:ADD
 wingpanel-indicator-nightlight:ADD
 wingpanel-indicator-notifications:ADD
 wingpanel-indicator-power:ADD
-wingpanel-indicator-session:ADD
+wingpanel-quick-settings:ADD
 wingpanel-indicator-sound:ADD
 wpebackend-fdo:ADD
 xdg-desktop-portal-gtk:ADD
