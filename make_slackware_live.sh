@@ -154,6 +154,18 @@ RTUIDNR=${RTUIDNR:-"378"}
 RTGRP=${RTGRP:-"rtkit"}
 RTGRPNR=${RTGRPNR:-"378"}
 
+# The greetd account:
+GRDUID=${GRDUID:-"greeter"}
+GRDUIDNR=${GRDUIDNR:-"381"}
+GRDGRP=${GRDGRP:-"greeter"}
+GRDGRPNR=${GRDUIDNR:-"381"}
+
+# The cosmic-greeter account:
+CSMUID=${CSMUID:-"cosmic-greeter"}
+CSMUIDNR=${CSMUIDNR:-"600"}
+CSMGRP=${CSMGRP:-"cosmic-greeter"}
+CSMGRPNR=${CSMUIDNR:-"600"}
+
 # Custom name for the host:
 LIVE_HOSTNAME=${LIVE_HOSTNAME:-"darkstar"}
 
