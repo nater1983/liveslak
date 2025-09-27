@@ -191,7 +191,7 @@ WAIT=${WAIT:-"5"}
 #
 
 # Who built the live image:
-BUILDER=${BUILDER:-"mac-a-r0ni/gfs"}
+BUILDER=${BUILDER:-"jloc0 & N4t3R"}
 
 # Console font to use with syslinux for better language support:
 CONSFONT=${CONSFONT:-"ter-i16v.psf"}
