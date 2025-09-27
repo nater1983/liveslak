@@ -253,7 +253,7 @@ else
     cosmic)
       SEQ_SLACKWARE="tagfile:a,ap,d,l,n,tcl,x,xap,y,cosmic pkglist:slackextra"
       ;;
-    elem)
+    pantheon)
       SEQ_SLACKWARE="tagfile:a,ap,d,l,n,tcl,x,xap,y,elem pkglist:slackextra"
       ;;
     *)
@@ -384,7 +384,7 @@ case "$ISO_FLAVOR" in
     cosmic)
         OUTPUT=${OUTPUT:-"/opt/htdocs/linux/cosmic/liveiso"}
         ;;
-    elem)
+    pantheon)
         OUTPUT=${OUTPUT:-"/opt/htdocs/linux/pantheon/liveiso"}
         ;;
     *)
@@ -2304,7 +2304,7 @@ WGETOPTS="--timeout=20 --tries=2"
 GREYLIST=on
 PKGS_PRIORITY=( gnome )
 REPOPLUS=( gnome )
-MIRRORPLUS['gnome']=https://reddoglinux.ddns.net/linux/gnome/48.x/x86_64/
+MIRRORPLUS['gnome']=https://reddoglinux.ddns.net/linux/gnome/49.x/x86_64/
 EOPL
   cat <<EOPL > etc/slackpkg/greylist
 
@@ -2587,22 +2587,41 @@ install -m 0644 ${LIVE_TOOLDIR}/media/slackware/icons/graySW_512px.png \
 #Icon=user-desktop
 #Type=Directory
 #EOT
-cat <<EOT > ${LIVE_ROOTDIR}/usr/share/applications/setup2hd.desktop
-#!/usr/bin/env gnome-terminal
+# Launcher for setup2hd to use one of the supported terminals
+cat <<'EOT' > "${LIVE_ROOTDIR}/usr/local/sbin/setup2hd-launcher"
+#!/bin/bash
+# Launcher for setup2hd to use one of the supported terminals
+
+SCRIPT="/usr/local/sbin/setup2hd"
+
+if command -v gnome-terminal >/dev/null 2>&1; then
+    gnome-terminal -- bash -c "sudo -i $SCRIPT; exec bash"
+elif command -v cosmic-term >/dev/null 2>&1; then
+    cosmic-term -e "sudo -i $SCRIPT"
+elif command -v io.elementary.terminal >/dev/null 2>&1; then
+    io.elementary.terminal -e "sudo -i $SCRIPT"
+else
+    echo "No supported terminal found!" >&2
+    exit 1
+fi
+EOT
+# Add a 'setup2hd' on the user's Application Menu:
+cat <<EOT > "${LIVE_ROOTDIR}/usr/share/applications/setup2hd.desktop"
 [Desktop Entry]
 Type=Application
-Terminal=true
+Terminal=false
 Name=Install ${DISTRO^}
 Comment=Install ${DISTRO^} (live or regular) to Harddisk
 Icon=/usr/share/pixmaps/liveslak.png
-Exec=sudo -i /usr/local/sbin/setup2hd
+Exec=/usr/local/sbin/setup2hd-launcher
+Categories=System;Utility;
 EOT
-# Let Plasma5 trust the desktop shortcut:
+# Let all desktop's trust the desktop shortcut:
 chmod 0544 ${LIVE_ROOTDIR}/usr/share/applications/setup2hd.desktop
-
+chmod 0755 ${LIVE_ROOTDIR}/usr/local/sbin/setup2hd-launcher
 
 # -------------------------------------------------------------------------- #
-echo "-- Configuring GNOME."
+echo "-- Configuring $ISO_FLAVOR."
 # -------------------------------------------------------------------------- #
 
 # Prepare some GNOME defaults for the 'live' user and any new users.
