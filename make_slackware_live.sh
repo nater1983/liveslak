@@ -168,9 +168,9 @@ CSMGRPNR=${CSMUIDNR:-"600"}
 
 # The lightdm account:
 LDUID=${LDUID:-"lightdm"}
-LDUIDNR=${LDUIDNR:-"400"}
+LDUIDNR=${LDUIDNR:-"620"}
 LDGRP=${LDGRP:-"lightdm"}
-LDGRPNR=${LDGRPNR:-"400"}
+LDGRPNR=${LDGRPNR:-"620"}
 
 # Custom name for the host:
 LIVE_HOSTNAME=${LIVE_HOSTNAME:-"darkstar"}
@@ -2114,7 +2114,7 @@ fi
 if ! chroot ${LIVE_ROOTDIR} /usr/bin/getent passwd ${LDUID} > /dev/null 2>&1 ;
 then
   chroot ${LIVE_ROOTDIR} /usr/sbin/groupadd -g ${LDUIDNR} ${LDGRP}
-  chroot ${LIVE_ROOTDIR} /usr/sbin/useradd -c "User for COSMIC Greeter" -u ${LDUIDNR} -g ${LDGRPNR} -G video -d /var/lib/cosmic-greeter -s /bin/false ${LDUID}
+  chroot ${LIVE_ROOTDIR} /usr/sbin/useradd -c "User for Lightdm Greeter" -u ${LDUIDNR} -g ${LDGRPNR} -G video -d /var/lib/lightdm -s /bin/false ${LDUID}
 fi
 
   if ! echo "${NVUID}:$(openssl rand -base64 12)" | /usr/sbin/chpasswd -R ${LIVE_ROOTDIR} 2>/dev/null ; then
