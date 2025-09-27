@@ -239,8 +239,6 @@ else
       SEQ_SLACKWARE="tagfile:a,ap,d,l,n,tcl,x,xap,y,elem pkglist:slackextra"
       ;;
     *)
-      echo "Unknown ISO flavor: $ISO_FLAVOR"
-      echo "Valid options: gnome | cosmic | elem"
       exit 1
       ;;
   esac
