@@ -359,7 +359,22 @@ SQ_COMP=${SQ_COMP:-"xz"}
 LIVE_ROOTDIR=${LIVE_ROOTDIR:-"/mnt/slackwarelive"}
 
 # Directory where the live ISO image will be written:
-OUTPUT=${OUTPUT:-"/opt/htdocs/linux/gnome/49.x/liveiso"}
+#OUTPUT=${OUTPUT:-"/opt/htdocs/linux/gnome/49.x/liveiso"}
+
+case "$ISO_FLAVOR" in
+    gnome)
+        OUTPUT=${OUTPUT:-"/opt/htdocs/linux/gnome/49.x/liveiso"}
+        ;;
+    cosmic)
+        OUTPUT=${OUTPUT:-"/opt/htdocs/linux/cosmic/liveiso"}
+        ;;
+    elem)
+        OUTPUT=${OUTPUT:-"/opt/htdocs/linux/elem/liveiso"}
+        ;;
+    *)
+        exit 1
+        ;;
+esac
 
 # Directory where we create the staging directory:
 TMP=${TMP:-"/home/liveslak"}
