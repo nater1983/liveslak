@@ -379,7 +379,7 @@ LIVE_ROOTDIR=${LIVE_ROOTDIR:-"/mnt/slackwarelive"}
 
 case "$ISO_FLAVOR" in
     gnome)
-        OUTPUT=${OUTPUT:-"/opt/htdocs/linux/gnome/49.x/liveiso"}
+        OUTPUT=${OUTPUT:-"/opt/htdocs/linux/gnome/liveiso"}
         ;;
     cosmic)
         OUTPUT=${OUTPUT:-"/opt/htdocs/linux/cosmic/liveiso"}
