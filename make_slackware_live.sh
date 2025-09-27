@@ -2110,6 +2110,13 @@ then
   chroot ${LIVE_ROOTDIR} /usr/sbin/useradd -c "User for COSMIC Greeter" -u ${CSMUIDNR} -g ${CSMGRPNR} -G video -d /var/lib/cosmic-greeter -s /bin/false ${CSMUID}
 fi
 
+# Create group and user for the cosmic-greeter session:
+if ! chroot ${LIVE_ROOTDIR} /usr/bin/getent passwd ${LDUID} > /dev/null 2>&1 ;
+then
+  chroot ${LIVE_ROOTDIR} /usr/sbin/groupadd -g ${LDUIDNR} ${LDGRP}
+  chroot ${LIVE_ROOTDIR} /usr/sbin/useradd -c "User for COSMIC Greeter" -u ${LDUIDNR} -g ${LDGRPNR} -G video -d /var/lib/cosmic-greeter -s /bin/false ${LDUID}
+fi
+
   if ! echo "${NVUID}:$(openssl rand -base64 12)" | /usr/sbin/chpasswd -R ${LIVE_ROOTDIR} 2>/dev/null ; then
     echo "${NVUID}:$(openssl rand -base64 12)" | chroot ${LIVE_ROOTDIR} /usr/sbin/chpasswd
   fi
