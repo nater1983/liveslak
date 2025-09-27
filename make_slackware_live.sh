@@ -385,7 +385,7 @@ case "$ISO_FLAVOR" in
         OUTPUT=${OUTPUT:-"/opt/htdocs/linux/cosmic/liveiso"}
         ;;
     elem)
-        OUTPUT=${OUTPUT:-"/opt/htdocs/linux/elem/liveiso"}
+        OUTPUT=${OUTPUT:-"/opt/htdocs/linux/pantheon/liveiso"}
         ;;
     *)
         exit 1
