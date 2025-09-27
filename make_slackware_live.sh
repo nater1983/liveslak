@@ -101,6 +101,9 @@ REFRESH=""
 # Use xorriso instead of mkisofs/isohybrid to create the ISO:
 USEXORR=${USEXORR:-"NO"}
 
+# First argument decides the flavor: gnome | cosmic | elem
+ISO_FLAVOR="$1"
+
 #
 # ---------------------------------------------------------------------------
 #
@@ -213,7 +216,7 @@ SL_ARCH=${SL_ARCH:-"x86_64"}
 # Root directory of a Slackware local mirror tree;
 # You can define custom repository location (must be in local filesystem)
 # for any module in the file ./pkglists/<module>.conf:
-SL_REPO=${SL_REPO:-"/home/liveslak-gfs49"}
+SL_REPO=${SL_REPO:-"/opt/htdocs/linux/liveiso"}
 DEF_SL_REPO=${SL_REPO}
 
 # The rsync URI of our default Slackware mirror server:
@@ -221,12 +224,26 @@ SL_REPO_URL=${SL_REPO_URL:-"rsync.osuosl.org::slackware"}
 DEF_SL_REPO_URL=${SL_REPO_URL}
 
 # List of Slackware package series - each will become a squashfs module:
-if [ "$(echo ${SL_VERSION}|cut -d. -f1)" == "14" ]; then
-  # Slackware up and until 14.2 has KDE4 which includes the 'kdei' package set:
+if [ "$(echo ${SL_VERSION} | cut -d. -f1)" == "14" ]; then
+  # Slackware up to 14.2 had KDE4 with 'kdei'
   SEQ_SLACKWARE="tagfile:a,ap,d,e,f,k,kde,kdei,l,n,t,tcl,x,xap,xfce,y pkglist:slackextra"
 else
-  # Exclude Emacs to keep the ISO size below DVD size:
-  SEQ_SLACKWARE="tagfile:a,ap,d,gnome,l,n,tcl,x,y,vm pkglist:slackextra"
+  case "$ISO_FLAVOR" in
+    gnome)
+      SEQ_SLACKWARE="tagfile:a,ap,d,l,n,tcl,x,xap,y,gnome pkglist:slackextra"
+      ;;
+    cosmic)
+      SEQ_SLACKWARE="tagfile:a,ap,d,l,n,tcl,x,xap,y,cosmic pkglist:slackextra"
+      ;;
+    elem)
+      SEQ_SLACKWARE="tagfile:a,ap,d,l,n,tcl,x,xap,y,elem pkglist:slackextra"
+      ;;
+    *)
+      echo "Unknown ISO flavor: $ISO_FLAVOR"
+      echo "Valid options: gnome | cosmic | elem"
+      exit 1
+      ;;
+  esac
 fi
 
 # Stripped-down Slackware with XFCE as the Desktop Environment:
@@ -342,10 +359,10 @@ SQ_COMP=${SQ_COMP:-"xz"}
 LIVE_ROOTDIR=${LIVE_ROOTDIR:-"/mnt/slackwarelive"}
 
 # Directory where the live ISO image will be written:
-OUTPUT=${OUTPUT:-"/home/liveslak-gfs49"}
+OUTPUT=${OUTPUT:-"/opt/htdocs/linux/gnome/49.x/liveiso"}
 
 # Directory where we create the staging directory:
-TMP=${TMP:-"/home/liveslak-gfs49"}
+TMP=${TMP:-"/home/liveslak"}
 
 # Toplevel directory of our staging area (this needs sufficient storage):
 LIVE_STAGING=${LIVE_STAGING:-"${TMP}/slackwarelive_staging"}
