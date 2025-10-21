@@ -34,6 +34,7 @@ ghex:ADD
 gitg:ADD
 gjs:ADD
 glib2:ADD
+glycin:ADD
 gnome-autoar:ADD
 gnome-backgrounds:ADD
 gnome-bluetooth:ADD
