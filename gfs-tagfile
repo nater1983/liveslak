@@ -1,4 +1,4 @@
-AppStream:ADD
+appstream:ADD
 Catch2:ADD
 NetworkManager-openvpn-gtk4:ADD
 adwaita-icon-theme:ADD
