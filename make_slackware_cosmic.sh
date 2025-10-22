@@ -3,6 +3,8 @@
 # Copyright 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024  Eric Hameleers, Eindhoven, NL 
 # All rights reserved.
 #
+# Modifications for cosmic Copypasta 2023-2024 Jay Lanagan, Detroit, MI, USA.
+#
 #   Permission to use, copy, modify, and distribute this software for
 #   any purpose with or without fee is hereby granted, provided that
 #   the above copyright notice and this permission notice appear in all
@@ -101,8 +103,8 @@ REFRESH=""
 # Use xorriso instead of mkisofs/isohybrid to create the ISO:
 USEXORR=${USEXORR:-"NO"}
 
-# First argument decides the flavor: gnome | cosmic | elem
-ISO_FLAVOR="$1"
+# Remove extra/unneeded package data. Options: doc,mandoc,bloat,waste,local
+TRIM=${TRIM:-""}
 
 #
 # ---------------------------------------------------------------------------
@@ -133,26 +135,14 @@ LIVEPW=${LIVEPW:-"live"}
 # The nvidia persistence account:
 NVUID=${NVUID:-"nvidia"}
 NVUIDNR=${NVUIDNR:-"365"}
-NVGRP=${NVGRP:-"nvidia"}
-NVGRPNR=${NVGRPNR:-"365"}
+NVGRP=${NVFRP:-"nvidia"}
+NVGRPNR=${NVUIDNR:-"365"}
 
 # The flatpak account:
 FPUID=${FPUID:-"flatpak"}
 FPUIDNR=${FPUIDNR:-"372"}
 FPGRP=${FPGRP:-"flatpak"}
-FPGRPNR=${FPGRPNR:-"372"}
-
-# The tss account:
-TSUID=${TSUID:-"tss"}
-TSUIDNR=${TSUIDNR:-"374"}
-TSGRP=${TSGRP:-"tss"}
-TSGRPNR=${TSGRPNR:-"374"}
-
-# The rtkit account:
-RTUID=${RTUID:-"rtkit"}
-RTUIDNR=${RTUIDNR:-"378"}
-RTGRP=${RTGRP:-"rtkit"}
-RTGRPNR=${RTGRPNR:-"378"}
+FPGRPNR=${FPUIDNR:-"372"}
 
 # The greetd account:
 GRDUID=${GRDUID:-"greeter"}
@@ -166,14 +156,8 @@ CSMUIDNR=${CSMUIDNR:-"600"}
 CSMGRP=${CSMGRP:-"cosmic-greeter"}
 CSMGRPNR=${CSMUIDNR:-"600"}
 
-# The lightdm account:
-LDUID=${LDUID:-"lightdm"}
-LDUIDNR=${LDUIDNR:-"620"}
-LDGRP=${LDGRP:-"lightdm"}
-LDGRPNR=${LDGRPNR:-"620"}
-
 # Custom name for the host:
-LIVE_HOSTNAME=${LIVE_HOSTNAME:-"darkstar"}
+LIVE_HOSTNAME=${LIVE_HOSTNAME:-"cosmic-de"}
 
 # What runlevel to use if adding a DE like: XFCE, DAW, KTOWN etc...
 RUNLEVEL=${RUNLEVEL:-4}
@@ -242,24 +226,12 @@ SL_REPO_URL=${SL_REPO_URL:-"rsync.osuosl.org::slackware"}
 DEF_SL_REPO_URL=${SL_REPO_URL}
 
 # List of Slackware package series - each will become a squashfs module:
-if [ "$(echo ${SL_VERSION} | cut -d. -f1)" == "14" ]; then
-  # Slackware up to 14.2 had KDE4 with 'kdei'
+if [ "$(echo ${SL_VERSION}|cut -d. -f1)" == "14" ]; then
+  # Slackware up and until 14.2 has KDE4 which includes the 'kdei' package set:
   SEQ_SLACKWARE="tagfile:a,ap,d,e,f,k,kde,kdei,l,n,t,tcl,x,xap,xfce,y pkglist:slackextra"
 else
-  case "$ISO_FLAVOR" in
-    gnome)
-      SEQ_SLACKWARE="tagfile:a,ap,d,l,n,tcl,x,xap,y,gnome pkglist:slackextra"
-      ;;
-    cosmic)
-      SEQ_SLACKWARE="tagfile:a,ap,d,l,n,tcl,x,xap,y,cosmic pkglist:slackextra"
-      ;;
-    pantheon)
-      SEQ_SLACKWARE="tagfile:a,ap,d,l,n,tcl,x,xap,y,elem pkglist:slackextra"
-      ;;
-    *)
-      exit 1
-      ;;
-  esac
+  # Exclude Emacs to keep the ISO size below DVD size:
+  SEQ_SLACKWARE="tagfile:a,ap,d,l,n,x,xap,y,tools,cosmic pkglist:slackextra"
 fi
 
 # Stripped-down Slackware with XFCE as the Desktop Environment:
@@ -297,7 +269,7 @@ SEQ_STUDW="tagfile:a,ap,d,e,f,k,kde,l,n,t,tcl,x,xap,xfce,y pkglist:slackextra,sl
 # Package blacklists for variants:
 #BLACKLIST_DAW="seamonkey"
 #BLACKLIST_LEAN="seamonkey"
-BLACKLIST_SLACKWARE="calligra calligraplan gcc-gdc gcc-gfortran gcc-gnat gcc-objc krita kstars joe seamonkey google-go-lang"
+BLACKLIST_SLACKWARE="calligra calligraplan gcc-gdc gcc-gfortran gcc-gnat gcc-objc krita kstars joe seamonkey"
 #BLACKLIST_XFCE="gst-plugins-bad-free lynx mc motif mozilla-firefox pidgin xlockmore"
 
 # Potentially we will use package(s) from 'testing' instead of regular repo:
@@ -375,25 +347,10 @@ SQ_COMP=${SQ_COMP:-"xz"}
 LIVE_ROOTDIR=${LIVE_ROOTDIR:-"/mnt/slackwarelive"}
 
 # Directory where the live ISO image will be written:
-#OUTPUT=${OUTPUT:-"/opt/htdocs/linux/gnome/49.x/liveiso"}
-
-case "$ISO_FLAVOR" in
-    gnome)
-        OUTPUT=${OUTPUT:-"/opt/htdocs/linux/gnome/liveiso"}
-        ;;
-    cosmic)
-        OUTPUT=${OUTPUT:-"/opt/htdocs/linux/cosmic/liveiso"}
-        ;;
-    pantheon)
-        OUTPUT=${OUTPUT:-"/opt/htdocs/linux/pantheon/liveiso"}
-        ;;
-    *)
-        exit 1
-        ;;
-esac
+OUTPUT=${OUTPUT:-"/opt/htdocs/linux/cosmic/liveiso"}
 
 # Directory where we create the staging directory:
-TMP=${TMP:-"/home/liveslak"}
+TMP=${TMP:-"/home/liveslak-cosmic"}
 
 # Toplevel directory of our staging area (this needs sufficient storage):
 LIVE_STAGING=${LIVE_STAGING:-"${TMP}/slackwarelive_staging"}
@@ -1234,7 +1191,7 @@ function create_iso() {
 
   # Time to determine the output filename, now that we know all the variables
   # and ensured that the OUTPUT directory exists:
-  OUTFILE=${OUTFILE:-"${OUTPUT}/${DISTRO}${DIRSUFFIX}-live${ISOTAG}-${SL_VERSION}-${ISO_FLAVOR}.iso"}
+  OUTFILE=${OUTFILE:-"${OUTPUT}/${DISTRO}${DIRSUFFIX}-live${ISOTAG}-${SL_VERSION}-cosmic.iso"}
   if [ "$USEXORR" = "NO" ]; then
     mkisofs -o "${OUTFILE}" \
       -V "${MEDIALABEL}" \
@@ -1376,9 +1333,9 @@ EOT
   ln -s ${LIVEDE,,} ${LIVE_ROOTDIR}/usr/share/wallpapers/${DEF_THEME}
 
   # Custom background for the SDDM login greeter:
-  mkdir -p ${LIVE_ROOTDIR}/usr/share/sddm/themes/breeze
-  cp ${LIVE_ROOTDIR}/usr/share/${LIVEMAIN}/${LIVEDE,,}/background.jpg ${LIVE_ROOTDIR}/usr/share/sddm/themes/breeze/${LIVEDE,,}_background.jpg
-  cat <<EOT > ${LIVE_ROOTDIR}/usr/share/sddm/themes/breeze/theme.conf.user
+  mkdir -p ${LIVE_ROOTDIR}/usr/share/sddm/themes/sugar-candy
+  cp ${LIVE_ROOTDIR}/usr/share/${LIVEMAIN}/${LIVEDE,,}/background.jpg ${LIVE_ROOTDIR}/usr/share/sddm/themes/sugar-candy/${LIVEDE,,}_background.jpg
+  cat <<EOT > ${LIVE_ROOTDIR}/usr/share/sddm/themes/sugar-candy/theme.conf.user
 [General]
 background=${LIVEDE,,}_background.jpg
 EOT
@@ -2089,12 +2046,11 @@ then
   chroot ${LIVE_ROOTDIR} /usr/sbin/useradd -c "Nvidia persistence" -u ${NVUIDNR} -g ${NVGRPNR} -d /dev/null -s /bin/false ${NVUID}
   chroot ${LIVE_ROOTDIR} /usr/sbin/groupadd -g ${FPGRPNR} ${FPGRP}
   chroot ${LIVE_ROOTDIR} /usr/sbin/useradd -u ${FPUIDNR} -g ${FPGRPNR} -d /var/lib/${FPGRP} -s /bin/false ${FPUID}
-  chroot ${LIVE_ROOTDIR} /usr/sbin/groupadd -g ${TSGRPNR} ${TSGRP}
-  chroot ${LIVE_ROOTDIR} /usr/sbin/useradd -c "TSS/TPM Agent" -u ${TSUIDNR} -g ${TSGRPNR} -d /dev/null -s /sbin/nologin ${TSUID}
-  chroot ${LIVE_ROOTDIR} /usr/sbin/groupadd -g ${RTGRPNR} ${RTGRP}
-  chroot ${LIVE_ROOTDIR} /usr/sbin/useradd -u ${RTUIDNR} -g ${RTGRPNR} -d /var/lib/${RTGRP} -s /bin/false ${RTUID}
 
-#  chroot ${LIVE_ROOTDIR} /usr/sbin/useradd -u ${TSUIDNR} -g ${TSGRPNR} -d /home/${TSGRP} -s /bin/bash ${TSUID}
+  if ! echo "${NVUID}:$(openssl rand -base64 12)" | /usr/sbin/chpasswd -R ${LIVE_ROOTDIR} 2>/dev/null ; then
+    echo "${NVUID}:$(openssl rand -base64 12)" | chroot ${LIVE_ROOTDIR} /usr/sbin/chpasswd
+  fi
+fi
 
 # Create group and user for the greetd session:
 if ! chroot ${LIVE_ROOTDIR} /usr/bin/getent passwd ${GRDUID} > /dev/null 2>&1 ;
@@ -2108,18 +2064,6 @@ if ! chroot ${LIVE_ROOTDIR} /usr/bin/getent passwd ${CSMUID} > /dev/null 2>&1 ;
 then
   chroot ${LIVE_ROOTDIR} /usr/sbin/groupadd -g ${CSMGRPNR} ${CSMGRP}
   chroot ${LIVE_ROOTDIR} /usr/sbin/useradd -c "User for COSMIC Greeter" -u ${CSMUIDNR} -g ${CSMGRPNR} -G video -d /var/lib/cosmic-greeter -s /bin/false ${CSMUID}
-fi
-
-# Create group and user for the cosmic-greeter session:
-if ! chroot ${LIVE_ROOTDIR} /usr/bin/getent passwd ${LDUID} > /dev/null 2>&1 ;
-then
-  chroot ${LIVE_ROOTDIR} /usr/sbin/groupadd -g ${LDUIDNR} ${LDGRP}
-  chroot ${LIVE_ROOTDIR} /usr/sbin/useradd -c "User for Lightdm Greeter" -u ${LDUIDNR} -g ${LDGRPNR} -G video -d /var/lib/lightdm -s /bin/false ${LDUID}
-fi
-
-  if ! echo "${NVUID}:$(openssl rand -base64 12)" | /usr/sbin/chpasswd -R ${LIVE_ROOTDIR} 2>/dev/null ; then
-    echo "${NVUID}:$(openssl rand -base64 12)" | chroot ${LIVE_ROOTDIR} /usr/sbin/chpasswd
-  fi
 fi
 
 # Determine the full name of the live account in the image:
@@ -2290,12 +2234,160 @@ DEBUG_ETH_UP="no"
 EOT
 fi
 
+# Create blacklist for cosmic-* packages in ponce repo;
+cat << EOT >> ${LIVE_ROOTDIR}/etc/sboui/blacklist
+
+# Blacklist nwg-shell and newly added packages;
+[0-9]_cosmic
+[0-9]_lngn
+Imath
+abseil-cpp
+anthy-unicode
+appstream-glib
+aom
+avahi
+clinfo
+colord
+dav1d
+fcitx5
+fcitx5-anthy
+fcitx5-chinese-addons
+fcitx5-configtool
+fcitx5-gtk
+fcitx5-hangul
+fcitx5-kkc
+fcitx5-m17n
+fcitx5-qt
+fcitx5-sayura
+fcitx5-table-extra
+fcitx5-table-other
+fcitx5-theme-breeze
+fcitx5-unikey
+fmt
+gi-docgen
+gnugo
+gspell
+gtk-layer-shell
+gtkspell3
+html5lib
+immer
+iniparser
+labplot
+labwc
+lager
+libass
+libdaemon
+libdeflate
+libev
+libgusb
+libhandy
+libime
+libindi
+libnova
+libpaper
+libplacebo
+libsfdo
+libsoup3
+libtraceevent
+libtracefs
+libunibreak
+libxcvt
+lua
+luajit
+lxml
+mosh
+mpv
+mujs
+nghttp3
+nodejs
+noto-emoji
+nss-mdns
+nut
+nv-codec-headers
+pahole
+perl-IO-Tty
+perl-JSON
+protobuf3
+python-alabaster
+python-babel
+python-imagesize
+python-importlib_metadata
+python-pytz
+python-smartypants
+python-snowballstemmer
+python-sphinx
+python-zipp
+python3-build
+python3-calver
+python3-editables
+python3-exceptiongroup
+python3-flit_core
+python3-glad
+python3-hatchling
+python3-installer
+python3-pluggy
+python3-psutil
+python3-pyproject-hooks
+python3-setuptools-opt
+python3-setuptools-scm-opt
+python3-tomli_w
+python3-trove-classifiers
+python3-typing-extensions
+python3-webencodings
+python3-wheel
+qt6
+rdfind
+rust-opt
+rust16
+seatd
+scdoc
+sphinx-rtd-theme
+stellarsolver
+stow
+tree-sitter
+valgrind
+wcslib
+wlroots
+wsdd2
+zug
+xcb-imdkit
+xinput_calibrator
+
+EOT
+
 # First disable any potentially incorrect mirror for slackpkg:
 sed -e "s/^ *\([^#]\)/#\1/" -i ${LIVE_ROOTDIR}/etc/slackpkg/mirrors
 # Enable a Slackware mirror for slackpkg:
 cat <<EOT >> ${LIVE_ROOTDIR}/etc/slackpkg/mirrors
-https://reddoglinux.ddns.net/linux/slackware${DIRSUFFIX}-${SL_VERSION}/
+#http://mirrors.slackware.com/slackware/slackware${DIRSUFFIX}-${SL_VERSION}/
+http://ftp.osuosl.org/.2/slackware/slackware${DIRSUFFIX}-${SL_VERSION}/
 EOT
+
+# create cosmic-greeter.toml
+#cat << EOT >> ${LIVE_ROOTDIR}/etc/greetd/cosmic-greeter.toml
+#[terminal]
+## The VT to run the greeter on. Can be "next", "current" or a number
+## designating the VT.
+#vt = 7
+
+## The default session, also known as the greeter.
+#[default_session]
+
+## agreety is the bundled agetty/login-lookalike. You can replace "/bin/bash"
+## with whatever you want started, such as "sway".
+##command = "agreety --cmd start-cosmic"
+#command = "cosmic-comp -t cosmic-greeter cosmic-greeter"
+
+## The user to run the command as. The privileges this user must have depends
+## on the greeter. A graphical greeter may for example require the user to be
+## in the "video" group.
+#user = "greeter"
+
+#[system]
+#source_profile = "true"
+#runfile = "/var/run/greetd.run"
+#
+#EOT
 
 ## Blacklist the l10n packages;
 #cat << EOT >> ${LIVE_ROOTDIR}/etc/slackpkg/blacklist
@@ -2322,14 +2414,33 @@ VERBOSE=1
 ALLOW32BIT=off
 USEBL=1
 WGETOPTS="--timeout=20 --tries=2"
-GREYLIST=on
-PKGS_PRIORITY=( gnome )
-REPOPLUS=( gnome )
-MIRRORPLUS['gnome']=https://reddoglinux.ddns.net/linux/gnome/49.x/x86_64/
+GREYLIST=off
+PKGS_PRIORITY=( cosmic slackware64 )
+REPOPLUS=( cosmic )
+MIRRORPLUS['cosmic']=https://reddoglinux.ddns.net/linux/cosmic/x86_64/
 EOPL
-  cat <<EOPL > etc/slackpkg/greylist
 
+# add slackpkg+ blacklist ensuring we don't end up install-new-ing kde package sets
+# and/or the kernel packages. If you want to update your kernel,
+# comment out the kernel-* lines below.
+if [ -f var/log/packages/slackpkg+-* ] ; then
+  cat <<EOPL > etc/slackpkg/blacklist
+kde/
+xfce/
 EOPL
+  else
+    cat <<EOPL >> etc/slackpkg/slackpkgplus.conf
+#MIRRORPLUS['ktown']=http://slackware.nl/alien-kde/${SL_VERSION}/testing/${SL_ARCH}/
+#MIRRORPLUS['ktown']=http://slackware.nl/alien-kde/${SL_VERSION}/latest/${SL_ARCH}/
+EOPL
+  fi
+fi
+
+if [ -f var/log/packages/slackpkg+-* ] ; then
+  cat <<EOQL > etc/slackpkg/post-functions.conf
+/etc/sddm.conf.new:O
+default:K
+EOQL
 fi
 
 # Slackpkg wants you to opt-in on slackware-current:
@@ -2341,8 +2452,7 @@ fi
 ARCH=${SL_ARCH} /usr/sbin/slackpkg -batch=on -default_answer=y update gpg
 ARCH=${SL_ARCH} /usr/sbin/slackpkg -batch=on -default_answer=y update
 # Let any lingering .new files replace their originals:
-yes o | ARCH=${SL_ARCH} /usr/sbin/slackpkg new-config
-
+ARCH=${SL_ARCH} /usr/sbin/slackpkg -batch=on -default_answer=y new-config
 EOSL
 
 # Add our scripts to the Live OS:
@@ -2533,12 +2643,15 @@ mkdir -p ${LIVE_ROOTDIR}/usr/share/apps/kdm/pics/users
 ${MAGICK:-convert} ${FACE_ICON} -resize 64x64 - >${LIVE_ROOTDIR}/usr/share/apps/kdm/pics/users/blues.icon
 
 # Give XDM a nicer look:
-mkdir -p ${LIVE_ROOTDIR}/etc/X11/xdm/liveslak-xdm
-cp -a ${LIVE_TOOLDIR}/xdm/* ${LIVE_ROOTDIR}/etc/X11/xdm/liveslak-xdm/
+#mkdir -p ${LIVE_ROOTDIR}/etc/X11/xdm/liveslak-xdm
+#cp -a ${LIVE_TOOLDIR}/xdm/* ${LIVE_ROOTDIR}/etc/X11/xdm/liveslak-xdm/
 # Point xdm to the custom /etc/X11/xdm/liveslak-xdm/xdm-config:
-sed -i ${LIVE_ROOTDIR}/etc/rc.d/rc.4 -e 's,bin/xdm -nodaemon,& -config /etc/X11/xdm/liveslak-xdm/xdm-config,'
+#sed -i ${LIVE_ROOTDIR}/etc/rc.d/rc.4 -e 's,bin/xdm -nodaemon,& -config /etc/X11/xdm/liveslak-xdm/xdm-config,'
 # Adapt xdm configuration to target architecture:
-sed -i "s/@LIBDIR@/lib${DIRSUFFIX}/g" ${LIVE_ROOTDIR}/etc/X11/xdm/liveslak-xdm/xdm-config
+#sed -i "s/@LIBDIR@/lib${DIRSUFFIX}/g" ${LIVE_ROOTDIR}/etc/X11/xdm/liveslak-xdm/xdm-config
+
+# Screw XDM, we want our custom sddm as default
+sed -i ${LIVE_ROOTDIR}/etc/rc.d/rc.4 -e 's,bin/xdm,bin/sddm,g'
 
 # XDM needs a C preprocessor to calculate the login box position, and if
 # the ISO contains mcpp instead of the cpp contained in full gcc, we will
@@ -2594,6 +2707,7 @@ if (-x /usr/bin/Xdialog) then
   setenv XDIALOG_FORCE_AUTOSIZE 1
 endif
 EOT
+
 # Once we are certain this works, make the scripts executable:
 chmod 0644 ${LIVE_ROOTDIR}/etc/profile.d/dialog.{c,}sh
 
@@ -2608,95 +2722,52 @@ install -m 0644 ${LIVE_TOOLDIR}/media/slackware/icons/graySW_512px.png \
 #Icon=user-desktop
 #Type=Directory
 #EOT
-# Launcher for setup2hd to use one of the supported terminals
-cat <<'EOT' > "${LIVE_ROOTDIR}/usr/local/sbin/setup2hd-launcher"
-#!/bin/bash
-# Launcher for setup2hd to use one of the supported terminals
-
-SCRIPT="/usr/local/sbin/setup2hd"
-
-if command -v gnome-terminal >/dev/null 2>&1; then
-    gnome-terminal -- bash -c "sudo -i $SCRIPT; exec bash"
-elif command -v cosmic-term >/dev/null 2>&1; then
-    cosmic-term -e "sudo -i $SCRIPT"
-elif command -v io.elementary.terminal >/dev/null 2>&1; then
-    io.elementary.terminal -e "sudo -i $SCRIPT"
-else
-    echo "No supported terminal found!" >&2
-    exit 1
-fi
-EOT
-# Add a 'setup2hd' on the user's Application Menu:
-cat <<EOT > "${LIVE_ROOTDIR}/usr/share/applications/setup2hd.desktop"
+#### changed xdg-open to cosmic-term
+cat <<EOT > ${LIVE_ROOTDIR}/usr/share/applications/setup2hd.desktop
+#!/usr/bin/env cosmic-term
 [Desktop Entry]
 Type=Application
-Terminal=false
+Terminal=true
 Name=Install ${DISTRO^}
 Comment=Install ${DISTRO^} (live or regular) to Harddisk
 Icon=/usr/share/pixmaps/liveslak.png
-Exec=/usr/local/sbin/setup2hd-launcher
-Categories=System;Utility;
+Exec=sudo -i /usr/local/sbin/setup2hd
 EOT
-# Let all desktop's trust the desktop shortcut:
+# Let Plasma5 trust the desktop shortcut:
 chmod 0544 ${LIVE_ROOTDIR}/usr/share/applications/setup2hd.desktop
-chmod 0755 ${LIVE_ROOTDIR}/usr/local/sbin/setup2hd-launcher
+
 
 # -------------------------------------------------------------------------- #
-echo "-- Configuring $ISO_FLAVOR."
+echo "-- Configuring cosmic."
 # -------------------------------------------------------------------------- #
 
-# Prepare some GNOME defaults for the 'live' user and any new users.
+# Prepare some defaults for the 'live' user and any new users.
 # (don't show icons on the desktop for irrelevant stuff).
 # Also, allow other people to add their own custom skel*.txz archives:
 mkdir -p ${LIVE_ROOTDIR}/etc/skel/
 for SKEL in ${LIVE_TOOLDIR}/skel/skel*.txz ; do
   tar -xf ${SKEL} -C ${LIVE_ROOTDIR}/etc/skel/
-
-# Do not show the blueman applet, Gnome3 has its own BlueTooth widget:
-echo "NotShowIn=GNOME;" >> ${LIVE_ROOTDIR}/etc/xdg/autostart/blueman.desktop
-
-# Do not start gnome-initial-setup:
-mkdir -p ${LIVE_ROOTDIR}/home/${LIVEUID}/.config
-touch ${LIVE_ROOTDIR}/home/${LIVEUID}/.config/gnome-initial-setup-done
-# ensure nautilus opens when supposed to:
-if [ -x /usr/bin/nautilus ]; then
-  /usr/bin/xdg-mime default org.gnome.Nautilus.desktop inode/directory >/dev/null 2>${DBGOUT}
-fi
 done
 
-if [ "$LIVEDE" = "XFCE" ]; then
-  # Since the XFCE ISO no longer has xpdf, use Firefox as the PDF viewer
-  # if that is present:
-  mkdir -p ${LIVE_ROOTDIR}/etc/skel/.config
-  if [ -f ${LIVE_ROOTDIR}/usr/bin/firefox ]; then
-    cat << EOF > ${LIVE_ROOTDIR}/etc/skel/.config/mimeapps.list
-[Default Applications]
-application/pdf=mozilla-firefox.desktop
-EOF
-  else
-    # If firefox is not present, we hope that seamonkey is there;
-    # you won't have a PDF viewer in that case unfortunately, but you could
-    # download https://github.com/IsaacSchemm/pdf.js-seamonkey :
-    cat << EOF > ${LIVE_ROOTDIR}/etc/skel/.config/mimeapps.list
-[Default Applications]
-x-scheme-handler/http=seamonkey.desktop
-x-scheme-handler/https=seamonkey.desktop
-x-scheme-handler/ftp=seamonkey.desktop
-x-scheme-handler/chrome=seamonkey.desktop
-x-scheme-handler/mailto=seamonkey-mail.desktop
-text/html=seamonkey.desktop
+if [ "$LIVEDE" = "SLACKWARE" ]; then
+  # Set sane SDDM/greetd defaults on first boot (root-owned file):
+  mkdir -p ${LIVE_ROOTDIR}/var/lib/greetd
+  mkdir -p ${LIVE_ROOTDIR}/var/lib/cosmic-greeter
+  mkdir -p ${LIVE_ROOTDIR}/var/lib/sddm
+  cat <<EOT > ${LIVE_ROOTDIR}/var/lib/sddm/state.conf 
+[Last]
+# Name of the last logged-in user.
+# This user will be preselected when the login screen appears
+User=${LIVEUID}
 
-[Added Associations]
-x-scheme-handler/http=xfce4-web-browser.desktop;seamonkey.desktop;
-x-scheme-handler/https=xfce4-web-browser.desktop;seamonkey.desktop;
-x-scheme-handler/ftp=seamonkey.desktop;
-x-scheme-handler/chrome=seamonkey.desktop;
-x-scheme-handler/mailto=seamonkey.desktop;
-text/html=seamonkey.desktop;
-EOF
-  fi
+# Name of the session for the last logged-in user.
+# This session will be preselected when the login screen appears.
+Session=/usr/share/wayland-sessions/cosmic.desktop
+EOT
+  chroot ${LIVE_ROOTDIR} chown -R sddm:sddm var/lib/sddm
+  chroot ${LIVE_ROOTDIR} chown -R greeter:greeter var/lib/greetd
+  chroot ${LIVE_ROOTDIR} chown -R cosmic-greeter:cosmic-greeter var/lib/cosmic-greeter
 fi
-
 
 # Only configure for KDE4 if it is actually installed:
 if [ -d ${LIVE_ROOTDIR}/usr/lib${DIRSUFFIX}/kde4/libexec ]; then
@@ -2737,12 +2808,12 @@ EOT
 include "/usr/share/themes/Adwaita/gtk-2.0/gtkrc"
 include "/usr/share/gtk-2.0/gtkrc"
 include "/etc/gtk-2.0/gtkrc"
-gtk-theme-name="Adwaita"
+gtk-theme-name="Adwaita-dark"
 EOF
   mkdir -p ${LIVE_ROOTDIR}/etc/skel/.config/gtk-3.0
   cat << EOF > ${LIVE_ROOTDIR}/etc/skel/.config/gtk-3.0/settings.ini
 [Settings]
-gtk-theme-name = Adwaita
+gtk-theme-name = Adwaita-dark
 EOF
 
   # Be gentle to low-performance USB media and limit disk I/O:
@@ -3405,7 +3476,17 @@ echo "-- Tweaking system startup."
 # -------------------------------------------------------------------------- #
 
 # Configure the default DE when running startx:
+if [ "$LIVEDE" = "MATE" ]; then
+  ln -sf xinitrc.mate-session ${LIVE_ROOTDIR}/etc/X11/xinit/xinitrc
+elif [ "$LIVEDE" = "CINNAMON" ]; then
+  ln -sf xinitrc.cinnamon-session ${LIVE_ROOTDIR}/etc/X11/xinit/xinitrc
+elif [ "$LIVEDE" = "DLACK" ]; then
   ln -sf xinitrc.gnome ${LIVE_ROOTDIR}/etc/X11/xinit/xinitrc
+elif [ -f ${LIVE_ROOTDIR}/etc/X11/xinit/xinitrc.kde ]; then
+  ln -sf xinitrc.kde ${LIVE_ROOTDIR}/etc/X11/xinit/xinitrc
+elif [ -f ${LIVE_ROOTDIR}/etc/X11/xinit/xinitrc.xfce ]; then
+  ln -sf xinitrc.xfce ${LIVE_ROOTDIR}/etc/X11/xinit/xinitrc
+fi
 
 # Configure the default runlevel:
 sed -i ${LIVE_ROOTDIR}/etc/inittab -e "s/\(id:\).\(:initdefault:\)/\1${RUNLEVEL}\2/"
@@ -3424,9 +3505,6 @@ if [ -x ${LIVE_ROOTDIR}/usr/sbin/cupsd ] && [ -f ${LIVE_ROOTDIR}/etc/rc.d/rc.cup
 fi
 if [ -x ${LIVE_ROOTDIR}/usr/sbin/cupsd ] && [ -f ${LIVE_ROOTDIR}/etc/rc.d/rc.cups-browsed ]; then
   chmod +x ${LIVE_ROOTDIR}/etc/rc.d/rc.cups-browsed
-fi
-if [ -x ${LIVE_ROOTDIR}/usr/bin/virsh ] && [ -f ${LIVE_ROOTDIR}/etc/rc.d/rc.libvirt ]; then
-  chmod +x ${LIVE_ROOTDIR}/etc/rc.d/rc.libvirt
 fi
 
 # Add a softvol pre-amp to ALSA - some computers have too low volumes.
@@ -3551,13 +3629,6 @@ if  [ -x /etc/rc.d/rc.nvidia-persistenced ] && [ -d /var/run/nvidia-persistenced
   chown ${NVUID}:${NVGRP} /var/run/nvidia-persistenced 2>/dev/null
   /etc/rc.d/rc.nvidia-persistenced start
 fi
-
-# Start the openrc-settingsd daemon:
-if  [ -x /etc/rc.d/rc.openrc-settingsd ]; then
-  echo "Starting openrc-settingsd daemon..."
-  /etc/rc.d/rc.openrc-settingsd start
-fi
-
 EOT
 
 cat <<EOT >> ${LIVE_ROOTDIR}/etc/rc.d/rc.local_shutdown
@@ -3567,13 +3638,6 @@ if  [ -x /etc/rc.d/rc.nvidia-persistenced ]; then
   echo "Stopping nvidia persistence daemon..."
   /etc/rc.d/rc.nvidia-persistenced stop
 fi
-
-# Stop the openrc-settingsd daemon:
-if  [ -x /etc/rc.d/rc.openrc-settingsd ]; then
-  echo "Stoping openrc-settingsd daemon..."
-  /etc/rc.d/rc.openrc-settingsd stop
-fi
-
 EOT
 
 # Clean out the unneeded stuff:
