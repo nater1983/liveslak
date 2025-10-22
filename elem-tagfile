@@ -53,6 +53,7 @@ libchamplain:ADD
 libcloudproviders:ADD
 libdex:ADD
 libei:ADD
+libfyaml:ADD
 libgit2:ADD
 libgit2-glib:ADD
 libgweather4:ADD
