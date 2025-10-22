@@ -1,4 +1,4 @@
-AppStream:ADD
+appstream:ADD
 appeditor:ADD
 bamf:ADD
 bluetooth-daemon:ADD
