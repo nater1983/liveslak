@@ -11,6 +11,24 @@ fi
 tempfile=$(mktemp)
 trap "rm -f $tempfile" EXIT
 
+liveslak_dir="/opt/htdocs/linux/liveslak"
+slackware_dir="$liveslak_dir/slackware64-current"
+
+# Remove slackware64-current if older than 24 hours
+if [ -d "$slackware_dir" ]; then
+    dir_mtime=$(stat -c %Y "$slackware_dir")
+    now=$(date +%s)
+    age=$(( now - dir_mtime ))
+    if [ "$age" -ge 86400 ]; then
+        dialog --infobox "Removing old slackware64-current (older than 24 hours)..." 5 60
+        rm -fr "$slackware_dir"
+        sleep 1
+    else
+        dialog --infobox "Existing slackware64-current is less than 24 hours old, keeping it." 5 60
+        sleep 1
+    fi
+fi
+
 run_build_script() {
     local script_name=$1
     local log_file=$2
