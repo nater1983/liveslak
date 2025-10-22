@@ -2200,8 +2200,7 @@ GREYLIST=on
 STRICTGPG=on
 SEARCH_CLOG_INPARENT=on
 PKGS_PRIORITY=( pantheon )
-REPOPLUS=( pantheon slackpkgplus )
-MIRRORPLUS['slackpkgplus']=http://slackware.nl/slackpkgplus/
+REPOPLUS=( pantheon )
 MIRRORPLUS['pantheon']=https://reddoglinux.ddns.net/linux/pantheon/current-8/
 EOPL
   cat <<EOPL > etc/slackpkg/greylist
