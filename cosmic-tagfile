@@ -1,4 +1,4 @@
-AppStream:ADD
+appstream:ADD
 bubblewrap:ADD
 cosmic-applets:ADD
 cosmic-applibrary:ADD
