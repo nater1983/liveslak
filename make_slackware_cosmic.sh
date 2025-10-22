@@ -2360,7 +2360,7 @@ sed -e "s/^ *\([^#]\)/#\1/" -i ${LIVE_ROOTDIR}/etc/slackpkg/mirrors
 # Enable a Slackware mirror for slackpkg:
 cat <<EOT >> ${LIVE_ROOTDIR}/etc/slackpkg/mirrors
 #http://mirrors.slackware.com/slackware/slackware${DIRSUFFIX}-${SL_VERSION}/
-http://ftp.osuosl.org/.2/slackware/slackware${DIRSUFFIX}-${SL_VERSION}/
+http://slackware.uk/slackware/slackware${DIRSUFFIX}-${SL_VERSION}/
 EOT
 
 # create cosmic-greeter.toml
@@ -2415,7 +2415,7 @@ ALLOW32BIT=off
 USEBL=1
 WGETOPTS="--timeout=20 --tries=2"
 GREYLIST=off
-PKGS_PRIORITY=( cosmic slackware64 )
+PKGS_PRIORITY=( cosmic )
 REPOPLUS=( cosmic )
 MIRRORPLUS['cosmic']=https://reddoglinux.ddns.net/linux/cosmic/x86_64/
 EOPL
