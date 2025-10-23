@@ -2297,6 +2297,7 @@ GREYLIST=off
 PKGS_PRIORITY=( cosmic )
 REPOPLUS=( cosmic )
 MIRRORPLUS['cosmic']=https://reddoglinux.ddns.net/linux/cosmic/x86_64/
+#MIRRORPLUS['cosmic']=https://slackware.uk/people/n4t3r/cosmic/x86_64/
 EOPL
 
 # add slackpkg+ blacklist ensuring we don't end up install-new-ing kde package sets
