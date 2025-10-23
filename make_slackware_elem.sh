@@ -2202,6 +2202,7 @@ SEARCH_CLOG_INPARENT=on
 PKGS_PRIORITY=( pantheon )
 REPOPLUS=( pantheon )
 MIRRORPLUS['pantheon']=https://reddoglinux.ddns.net/linux/pantheon/current-8/
+#MIRRORPLUS['pantheon']=https://slackware.uk/people/n4t3r/pantheon/current-8/
 EOPL
   cat <<EOPL > etc/slackpkg/greylist
 cairo
