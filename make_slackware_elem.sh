@@ -2501,18 +2501,20 @@ chmod 0544 ${LIVE_ROOTDIR}/usr/share/applications/setup2hd.desktop
 
 
 # -------------------------------------------------------------------------- #
-echo "-- Configuring GNOME."
+echo "-- Configuring Pantheon."
 # -------------------------------------------------------------------------- #
 
-# Prepare some GNOME defaults for the 'live' user and any new users.
+# Prepare some Pantheon defaults for the 'live' user and any new users.
 # (don't show icons on the desktop for irrelevant stuff).
 # Also, allow other people to add their own custom skel*.txz archives:
 mkdir -p ${LIVE_ROOTDIR}/etc/skel/
 for SKEL in ${LIVE_TOOLDIR}/skel/skel*.txz ; do
   tar -xf ${SKEL} -C ${LIVE_ROOTDIR}/etc/skel/
-# Do not start gnome-initial-setup:
-mkdir -p ${LIVE_ROOTDIR}/home/${LIVEUID}/.config
-touch ${LIVE_ROOTDIR}/home/${LIVEUID}/.config/gnome-initial-setup-done
+
+# Make sure lightdm group and user id :
+  chroot ${LIVE_ROOTDIR} chown -R lightdm:lightdm var/lib/lightdm
+  chroot ${LIVE_ROOTDIR} chown -R lightdm:lightdm var/lib/lightdm-data
+
 # ensure nautilus opens when supposed to:
 if [ -x /usr/bin/nautilus ]; then
   /usr/bin/xdg-mime default org.gnome.Nautilus.desktop inode/directory >/dev/null 2>${DBGOUT}
