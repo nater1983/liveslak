@@ -1959,15 +1959,15 @@ none      /           tmpfs       defaults   1   1
 
 EOT
 
-# Pipewire 1.0.0 is capable of replacing pulseaudio and jack2:
-if chroot ${LIVE_ROOTDIR} /usr/bin/pkg-config libpipewire-0.3 --atleast-version=1
-then
-  # Make pipewire the default, kill pulseaudio:
-  if [ -x ${LIVE_ROOTDIR}/usr/sbin/pipewire-enable.sh ]; then
-    echo "-- Enabling pipewire"
-    chroot ${LIVE_ROOTDIR} /usr/sbin/pipewire-enable.sh
-  fi
-fi
+## Pipewire 1.0.0 is capable of replacing pulseaudio and jack2:
+#if chroot ${LIVE_ROOTDIR} /usr/bin/pkg-config libpipewire-0.3 --atleast-version=1
+#then
+#  # Make pipewire the default, kill pulseaudio:
+#  if [ -x ${LIVE_ROOTDIR}/usr/sbin/pipewire-enable.sh ]; then
+#    echo "-- Enabling pipewire"
+#    chroot ${LIVE_ROOTDIR} /usr/sbin/pipewire-enable.sh
+#  fi
+#fi
 
 # Prevent loop devices (sxz modules) from appearing in filemanagers:
 mkdir -p ${LIVE_ROOTDIR}/etc/udev/rules.d
