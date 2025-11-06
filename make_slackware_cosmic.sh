@@ -2618,7 +2618,7 @@ chmod 0544 ${LIVE_ROOTDIR}/usr/share/applications/setup2hd.desktop
 
 
 # -------------------------------------------------------------------------- #
-echo "-- Configuring cosmic."
+echo "-- Configuring Cosmic."
 # -------------------------------------------------------------------------- #
 
 # Prepare some defaults for the 'live' user and any new users.
