@@ -42,6 +42,8 @@ live_post_install () {
     /etc/sudoers \
     /etc/vconsole.conf \
     /etc/xdg/autostart \
+    /etc/greetd \
+    /etc/rc.d/rc.4.local \
     /home/live
   # Remove the marker file from the filesystem root:
   rm -f ${T_PX}/@MARKER@
