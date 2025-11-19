@@ -153,9 +153,9 @@ RTGRPNR=${RTGRPNR:-"378"}
 
 # The lightdm account:
 LDUID=${LDUID:-"lightdm"}
-LDUIDNR=${LDUIDNR:-"400"}
+LDUIDNR=${LDUIDNR:-"380"}
 LDGRP=${LDGRP:-"lightdm"}
-LDGRPNR=${LDGRPNR:-"400"}
+LDGRPNR=${LDGRPNR:-"380"}
 
 # Custom name for the host:
 LIVE_HOSTNAME=${LIVE_HOSTNAME:-"slackamentary"}
