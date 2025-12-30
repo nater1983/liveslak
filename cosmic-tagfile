@@ -32,6 +32,7 @@ geoclue2:ADD
 greetd:ADD
 just:ADD
 launcher:ADD
+leptonica:ADD
 libdisplay-info:ADD
 libfyaml:ADD
 libostree:ADD
@@ -43,6 +44,7 @@ sddm-sugar-candy:ADD
 switcheroo-control:ADD
 system76-fonts:ADD
 system76-power:ADD
+tesseract:ADD
 xdg-dbus-proxy:ADD
 xdg-desktop-portal-cosmic:ADD
 xdg-desktop-portal-gtk:ADD
