@@ -62,15 +62,18 @@ while true; do
             sleep 1
 
             src_base="/opt/htdocs/linux"
+            gnome_base="/opt/htdocs/mirror/slackware"
             liveslak_dir="$src_base/liveslak"
-            env_src="$src_base/gnome/49.x/x86_64"
-            env_dest="$liveslak_dir/slackware64-current/slackware64/gnome"
+            env_src="$gnome_base/gnome"
+            env_dest="$liveslak_dir/slackware64-current/slackware64"
+            env_dest2="$liveslak_dir/slackware64-current/slackware64/gnome"
             tag_src="$liveslak_dir/gfs-tagfile"
-            tag_dest="$env_dest/tagfile"
+            tag_dest="$env_dest2/tagfile"
 
             cp -av "$src_base/slackware64-current" "$liveslak_dir" | tee /tmp/gnome_copy.log
-            mkdir -p "$env_dest"
-            cp -av "$env_src"/* "$env_dest" | tee -a /tmp/gnome_copy.log
+            mkdir -p "$env_dest/{gnome,pkg}"
+            cp -av "$gnome_base/pkg/*" "$env_dest/pkg" | tee /tmp/gnome_copy.log
+            cp -av "$env_src"/* "$env_dest/gnome" | tee -a /tmp/gnome_copy.log
             cp -av "$tag_src" "$tag_dest" | tee -a /tmp/gnome_copy.log
 
             dialog --msgbox "GNOME files copied successfully.\n\nStarting make_slackware_gfs.sh..." 8 60
@@ -81,15 +84,18 @@ while true; do
             sleep 1
 
             src_base="/opt/htdocs/linux"
+            pantheon_base="/opt/htdocs/mirror/slackware"
             liveslak_dir="$src_base/liveslak"
-            env_src="$src_base/pantheon/current-8/x86_64"
-            env_dest="$liveslak_dir/slackware64-current/slackware64/elem"
+            env_src="$pantheon_base/pantheon"
+            env_dest="$liveslak_dir/slackware64-current/slackware64"
+            env_dest2="$liveslak_dir/slackware64-current/slackware64/elem"
             tag_src="$liveslak_dir/elem-tagfile"
-            tag_dest="$env_dest/tagfile"
+            tag_dest="$env_dest2/tagfile"
 
             cp -av "$src_base/slackware64-current" "$liveslak_dir" | tee /tmp/pantheon_copy.log
-            mkdir -p "$env_dest"
-            cp -av "$env_src"/* "$env_dest" | tee -a /tmp/pantheon_copy.log
+            mkdir -p "$env_dest/{elem,pkg}"
+            cp -av "$pantheon_base/pkg/*" "$env_dest/pkg" | tee /tmp/pantheon_copy.log
+            cp -av "$env_src"/* "$env_dest/elem" | tee -a /tmp/pantheon_copy.log
             cp -av "$tag_src" "$tag_dest" | tee -a /tmp/pantheon_copy.log
 
             dialog --msgbox "Pantheon (Elem) files copied successfully.\n\nStarting make_slackware_elem.sh..." 8 60
@@ -100,15 +106,18 @@ while true; do
             sleep 1
 
             src_base="/opt/htdocs/linux"
+            cosmic_base="/opt/htdocs/mirror/slackware"
             liveslak_dir="$src_base/liveslak"
-            env_src="$src_base/cosmic/x86_64"
-            env_dest="$liveslak_dir/slackware64-current/slackware64/cosmic"
+            env_src="$cosmic_base/cosmic"
+            env_dest="$liveslak_dir/slackware64-current/slackware64"
+            env_dest2="$liveslak_dir/slackware64-current/slackware64/cosmic"
             tag_src="$liveslak_dir/cosmic-tagfile"
-            tag_dest="$env_dest/tagfile"
+            tag_dest="$env_dest2/tagfile"
 
             cp -av "$src_base/slackware64-current" "$liveslak_dir" | tee /tmp/cosmic_copy.log
-            mkdir -p "$env_dest"
-            cp -av "$env_src"/* "$env_dest" | tee -a /tmp/cosmic_copy.log
+            mkdir -p "$env_dest/{cosmic,pkg}"
+            cp -av "$cosmic_base/pkg/*" "$env_dest/pkg" | tee /tmp/pantheon_copy.log
+            cp -av "$env_src"/* "$env_dest/cosmic" | tee -a /tmp/cosmic_copy.log
             cp -av "$tag_src" "$tag_dest" | tee -a /tmp/cosmic_copy.log
 
             dialog --msgbox "Cosmic files copied successfully.\n\nStarting make_slackware_cosmic.sh..." 8 60
