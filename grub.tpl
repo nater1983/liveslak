@@ -32,8 +32,8 @@ fi
 
 # Determine whether we can show a graphical themed menu:
 insmod font
-if loadfont dejavusansmono19 ; then
-  loadfont dejavusansmono15
+if loadfont dejavusansmono15 ; then
+  loadfont dejavusansmono12
   loadfont dejavusansmono5
   set gfxmode=1024x768,800x600,640x480,auto
   export gfxmode
