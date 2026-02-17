@@ -546,8 +546,14 @@ function install_pkgs() {
         PKGC2R="$(for MYLST in ${CORE2RAMMODS}; do grep "^${PKG}$" ${LIVE_TOOLDIR}/pkglists/${MYLST}.lst ; done)"
         unset MYLST
         if [ -n "${PKGC2R}" ]; then
-          # Found a package that is listed as a core2ram module:
-          continue
+          # Found a package that is listed as a core2ram module.
+          # If it was installed then skip here:
+          PKGINST=$(ls -1 ${LIVE_ROOTDIR}/var/log/packages/${PKG}-* 2>/dev/null |grep -E "/var/log/packages/${PKG}-[^-]+-[^-]+-[^-]+$" || true)
+          if [ -n "${PKGINST}" ]; then
+            echo "-- Not installing '$PKG' because it's part of core2ram."
+            unset ${PKGINST}
+            continue
+          fi
         fi
       fi
       # Skip installation on detecting a blacklisted package:
