@@ -546,14 +546,8 @@ function install_pkgs() {
         PKGC2R="$(for MYLST in ${CORE2RAMMODS}; do grep "^${PKG}$" ${LIVE_TOOLDIR}/pkglists/${MYLST}.lst ; done)"
         unset MYLST
         if [ -n "${PKGC2R}" ]; then
-          # Found a package that is listed as a core2ram module.
-          # If it was installed then skip here:
-          PKGINST=$(ls -1 ${LIVE_ROOTDIR}/var/log/packages/${PKG}-* 2>/dev/null |grep -E "/var/log/packages/${PKG}-[^-]+-[^-]+-[^-]+$" || true)
-          if [ -n "${PKGINST}" ]; then
-            echo "-- Not installing '$PKG' because it's part of core2ram."
-            unset ${PKGINST}
-            continue
-          fi
+          # Found a package that is listed as a core2ram module:
+          continue
         fi
       fi
       # Skip installation on detecting a blacklisted package:
@@ -804,12 +798,6 @@ function gen_bootmenu() {
     -e "s/@C2RSH@/$C2RMS/g" \
     > ${MENUROOTDIR}/vesamenu.cfg
 
-   # Get us a more recent version of keytab-lilo:
-   if [ ! -x /usr/local/sbin/keytab-lilo-liveslak ]; then
-     wget -nv -O /usr/local/sbin/keytab-lilo-liveslak \
-      'https://raw.githubusercontent.com/geneC/syslinux/refs/heads/master/utils/keytab-lilo'
-     chmod 0755 /usr/local/sbin/keytab-lilo-liveslak
-   fi
   for LANCOD in $(cat ${LIVE_TOOLDIR}/languages |grep -Ev "(^ *#|^$)" |cut -d: -f1)
   do
     LANDSC=$(cat ${LIVE_TOOLDIR}/languages |grep "^$LANCOD:" |cut -d: -f2)
@@ -1224,8 +1212,6 @@ function create_iso() {
   cd "${OUTPUT}"
     md5sum "$(basename "${OUTFILE}")" \
       > "$(basename "${OUTFILE}")".md5
-    sha256sum "$(basename "${OUTFILE}")" \
-      > "$(basename "${OUTFILE}")".sha256
   cd - 1>/dev/null
   echo "-- Live ISO image created:"
   echo "   - CDROM max size is 737.280.000 bytes (703 MB)"
@@ -2439,23 +2425,7 @@ if [ ! -e ${LIVE_ROOTDIR}/usr/bin/cpp ] && [ -x ${LIVE_ROOTDIR}/usr/bin/mcpp ];
 then
   ln -s mcpp ${LIVE_ROOTDIR}/usr/bin/cpp
 fi
-
-# Allow for the use of LightDM session manager:
-if ! grep -qi lightdm ${LIVE_ROOTDIR}/etc/rc.d/rc.4 ; then
-  sed -i ${LIVE_ROOTDIR}/etc/rc.d/rc.4 \
-    -e '/ SDDM /i# Look for LightDM:\nif [ -x /usr/bin/lightdm ]; then\n  exec /usr/bin/lightdm\nfi\n' 
-fi
-
-# For lightdm we create a new user account:
-if ! chroot ${LIVE_ROOTDIR} /usr/bin/getent passwd lightdm > /dev/null 2>&1 ;
-then
-  chroot ${LIVE_ROOTDIR} /usr/sbin/groupadd -g 380 lightdm
-  chroot ${LIVE_ROOTDIR} /usr/sbin/useradd -c "LightDM system account" -d /var/lib/lightdm -s /bin/false -u 380 -g 380 lightdm
-  if ! echo "lightdm:$(openssl rand -base64 12)" | /usr/sbin/chpasswd -R ${LIVE_ROOTDIR} 2>/dev/null ; then
-    echo "lightdm:$(openssl rand -base64 12)" | chroot ${LIVE_ROOTDIR} /usr/sbin/chpasswd
-  fi
-fi
-
+ 
 # The Xscreensaver should show a blank screen only, to prevent errors about
 # missing modules:
 echo "mode:           blank" > ${LIVE_ROOTDIR}/home/${LIVEUID}/.xscreensaver
